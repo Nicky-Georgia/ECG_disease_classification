@@ -1,12 +1,13 @@
-# Exploratory Data Analysis (EDA) & Preprocessing (All members)
+## Exploratory Data Analysis (EDA) & Preprocessing (All members)
 
-## 1. Data Collection & Cleaning
+
+### 1. Data Collection & Cleaning
 
 Gather open ECG datasets.
 
 Handle missing values and artifacts in signals.
 
-## 2. Feature Extraction & Engineering
+### 2. Feature Extraction & Engineering
 
 Compute statistical features (mean, median, etc.).
 
@@ -14,13 +15,16 @@ Extract frequency-domain features (Fourier coefficients, MFCC).
 
 Identify other relevant time-series features.
 
-## 3. Data Visualization & Analysis
+### 3. Data Visualization & Analysis
 
 Visualize ECG waveforms.
 
 Explore feature distributions and correlations.
 
-# Machine Learning (ML) Model Development (Maxim and Nikita)
+
+
+## Machine Learning (ML) Model Development (Maxim and Nikita)
+
 
 ## 4. Feature Selection & ML Model Training
 
