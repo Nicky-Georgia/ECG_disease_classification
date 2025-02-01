@@ -8,7 +8,9 @@ This project focuses on developing machine learning models for identifying and c
 Curator: Nikita Karagodin (tg: @Einstein_30)
 
 Maxim Pigalskiy (tg: @EIisLog)
+
 Nikita Rodionov (tg: white_shpengler)
+
 Sunnatilla Maxammadjonov (tg: @sunnatilla_maxammadjonov)
 
 
