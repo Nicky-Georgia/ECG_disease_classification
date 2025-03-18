@@ -18,3 +18,10 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan, title="ML Model Deployment API")
 
 app.include_router(endpoints.router)
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Server starting up...")
+
+    # Загружаем модели
+    model_manager.load_models()
