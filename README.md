@@ -1,7 +1,15 @@
-# Project Title
+# ECG_disease_classification
+Creating models for identifying and classification of important disorders of the heart from electrocardiogram (ECG)
 
-## Overview
-This project is designed to provide a robust backend application that includes data loading, model management, API endpoints, data validation, and logging functionalities. It serves as a foundation for building machine learning applications.
+## Project: "11. analyzing medical data for health monitoring"
+This project focuses on developing machine learning models for identifying and classifying heart diseases using ECG time series data. By leveraging advanced deep learning techniques, the models will analyze ECG signals to detect abnormalities and classify different types of heart conditions. 
+
+## Team
+Curator: Nikita Karagodin (tg: @Einstein_30)
+
+Maxim Pigalskiy (tg: @EIisLog)
+
+Nikita Rodionov (tg: white_shpengler)
 
 ## Directory Structure
 ```
