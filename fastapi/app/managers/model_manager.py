@@ -49,13 +49,11 @@ class ModelManager:
             gdown.download(url, destination, quiet=False)
             logger.info(f"Model downloaded successfully to {destination}")
 
-            # После загрузки добавляем модель в менеджер
             model_id = filename.split(".")[0]
             model = joblib.load(destination)
             self.models[model_id] = model
             logger.info(f"Model '{model_id}' loaded and added to model manager")
 
-            # Если активная модель ещё не назначена, назначаем её
             if not self.active_model_id:
                 self.active_model_id = model_id
                 logger.info(f"Active model set to {self.active_model_id}")
@@ -93,5 +91,16 @@ class ModelManager:
         else:
             logger.warning("No active model selected!")
             return None
+
+    def add_model(self, model_id, model_object):
+        """
+        Добавление модели в менеджер с проверкой корректности.
+        """
+        if hasattr(model_object, 'fit'):
+            self.models[model_id] = model_object
+            logger.info(f"Model {model_id} added to model manager.")
+        else:
+            logger.error(f"Cannot add model '{model_id}' to manager. Model is not valid.")
+            raise ValueError(f"Model '{model_id}' is not valid, it cannot be added to the manager.")
 
 model_manager = ModelManager()

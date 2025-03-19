@@ -1,10 +1,8 @@
 services:
   fastapi:
-    build: streamlit/
+    build: fastapi/
     ports:
-      - "8000:8000"
-    networks:
-      - deploy_network
+      - 8000:8000
     container_name: fastapi
 
   streamlit:
@@ -12,12 +10,5 @@ services:
     depends_on:
       - fastapi
     ports:
-      - "8501:8501"  
-    networks:
-      - deploy_network
+      - 8501:8501 
     container_name: streamlit
-
-networks:
-  deploy_network:
-    driver: bridge
-    

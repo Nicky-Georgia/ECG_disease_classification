@@ -2,73 +2,76 @@ import streamlit as st
 import requests
 import pandas as pd
 import json
+import re
+   
+API_URL = "http://localhost:8000"  
 
-# Конфигурация
-API_URL = "http://localhost:8501"  
+models = []
 
-def get_models():
+# Set the title and caption for the Streamlit app
+st.set_page_config(page_title="ECG analysis")
+st.title("ECG analysis")
+st.caption(
+    "App integrated with a pretrained model for ECG data classification with multiple user input options"
+)
+
+
+if st.button("get_models"):
+
     response = requests.get(f"{API_URL}/models")
-    if response.status_code == 200:
-        return response.json()["models"]
-    else:
-        st.error("Ошибка при получении списка моделей")
-        return []
 
-def set_active_model(model_id):
+    if response.status_code == 200:
+        st.success("models fetched successfully")
+        models = st.write(response.json()['models'])
+    else:
+        st.write(response.status_code)
+        st.write(response.reason)
+        st.error("Failed to fetch models.")
+
+# Set active model
+st.header("Set Active Model")
+model_id = st.selectbox("Select Model ID", [model["id"] for model in models])
+if st.button("Set Active Model"):
     response = requests.post(f"{API_URL}/set", json={"model_id": model_id})
     if response.status_code == 200:
-        st.success(response.json()["detail"])
+        st.success(response.json()["message"])
     else:
-        st.error("Ошибка при установке активной модели")
+        st.error("Failed to set active model.")
 
-# Функция для обучения модели
-def train_model(hyperparameters):
-    response = requests.post(f"{API_URL}/fit", json=hyperparameters)
-    if response.status_code == 200:
-        st.success("Модель успешно обучена")
-    else:
-        st.error("Ошибка при обучении модели")
+def extract_data(input_string):
+    # Regular expression pattern to match float numbers
+    float_pattern = r'-?\d+\.\d+'
 
-# Функция для предсказания
-def predict(data):
+    # Find all matches in the input string
+    float_numbers = re.findall(float_pattern, input_string)
+
+    # Convert the matched strings to float numbers
+    float_numbers = [float(num) for num in float_numbers]
+
+    return float_numbers
+
+st.header("Make Prediction")
+data = st.text_input("Enter input data (JSON format)", "[]")
+
+if st.button("Predict"):
+    data = json.loads(data)
     response = requests.post(f"{API_URL}/predict", json={"data": data})
     if response.status_code == 200:
-        return response.json()["predictions"]
+        st.success(f"Prediction: {response.json()['prediction']}")
+    elif json.JSONDecodeError:
+        st.error("Invalid JSON format.")
     else:
-        st.error("Ошибка при предсказании")
-        return []
+        st.error("Prediction failed.")
     
-def fine_tune(data,params={}):
-    response = requests.post(f'{API_URL}/finetune',data,params)
-    if response.status_code == 200:
-        st.success("Модель успешно обучена")
-    else:
-        st.error("Ошибка при предсказании")
-        return []
-# Основной интерфейс Streamlit
-st.title("Streamlit ML Service")
-
-# Загрузка моделей
-models = get_models()
-st.write("Доступные модели:", models)
-
-# Обучение модели
-st.header("Обучение модели")
-hyperparameters = st.text_area("Введите гиперпараметры в формате JSON")
-if st.button("Обучить модель"):
+st.header("Train Model")
+params = st.text_input("Enter training parameters (JSON format)", "{}")
+if st.button("Train Model"):
     try:
-        hyperparams_dict = json.loads(hyperparameters)
-        train_model(hyperparams_dict)
+        params_dict = json.loads(params)
+        response = requests.post(f"{API_URL}/fit", json={"params": params_dict})
+        if response.status_code == 200:
+            st.success(response.json()["message"])
+        else:
+            st.error("Training failed.")
     except json.JSONDecodeError:
-        st.error("Некорректный формат JSON")
-
-# Предсказание
-st.header("Предсказание")
-input_data = st.text_area("Введите данные для предсказания в формате JSON")
-if st.button("Предсказать"):
-    try:
-        data_dict = json.loads(input_data)
-        prediction = predict(data_dict)
-        st.write("Предсказание:", prediction)
-    except json.JSONDecodeError:
-        st.error("Некорректный формат JSON")
+        st.error("Invalid JSON format.")
