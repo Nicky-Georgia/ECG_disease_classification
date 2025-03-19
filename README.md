@@ -43,16 +43,16 @@ To run the application, execute the following command:
 ```
 docker compose up
 ```
-![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/photo.jpg?raw=true)
+![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/pics/photo.jpg?raw=true)
 
 ## Features
 - **Data Loading**: Load and preprocess data from various sources.
-![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/upload.jpg?raw=true)
-![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/predict.jpg?raw=true)
+![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/pics/upload.jpg?raw=true)
+![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/pics/predict.jpg?raw=true)
 - **Model Management**: Train, evaluate, and save machine learning models.
-![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/create_model.jpg?raw=true)
-![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/set.jpg?raw=true)
-![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/fit.jpg?raw=true)
+![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/pics/create_model.jpg?raw=true)
+![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/pics/set.jpg?raw=true)
+![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/pics/fit.jpg?raw=true)
 - **API Endpoints**: Define and handle API requests for the application.
 - **Data Validation**: Validate and serialize data using schemas.
 - **Logging**: Set up logging for monitoring and debugging.
