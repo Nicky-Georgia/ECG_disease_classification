@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 # Конфигурация
-API_URL = "http://localhost:8000"  # Замените на URL вашего FastAPI-сервера
+API_URL = "http://localhost:8000"  
 
 # Функция для загрузки модели
 def load_model():
