@@ -41,8 +41,9 @@ backend
 ## Usage
 To run the application, execute the following command:
 ```
-python app/main.py
+docker compose up
 ```
+![alt text](https://github.com/Nicky-Georgia/ECG_disease_classification/blob/main/photo.jpg?raw=true)
 
 ## Features
 - **Data Loading**: Load and preprocess data from various sources.
