@@ -1,20 +1,23 @@
-version: '3.10'
-
 services:
   fastapi:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: streamlit/
     ports:
       - "8000:8000"
+    networks:
+      - deploy_network
+    container_name: fastapi
 
   streamlit:
-    image: python:3.10-slim
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: streamlit run streamlit_app.py --server.port=8501 --server.address=0.0.0.0
-    ports:
-      - "8501:8501"
+    build: streamlit/
     depends_on:
       - fastapi
+    ports:
+      - "8501:8501"  
+    networks:
+      - deploy_network
+    container_name: streamlit
+
+networks:
+  deploy_network:
+    driver: bridge
+    

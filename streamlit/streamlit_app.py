@@ -4,16 +4,22 @@ import pandas as pd
 import json
 
 # Конфигурация
-API_URL = "http://localhost:8000"  
+API_URL = "http://localhost:8501"  
 
-# Функция для загрузки модели
-def load_model():
+def get_models():
     response = requests.get(f"{API_URL}/models")
     if response.status_code == 200:
-        return response.json()
+        return response.json()["models"]
     else:
-        st.error("Ошибка при загрузке моделей")
+        st.error("Ошибка при получении списка моделей")
         return []
+
+def set_active_model(model_id):
+    response = requests.post(f"{API_URL}/set", json={"model_id": model_id})
+    if response.status_code == 200:
+        st.success(response.json()["detail"])
+    else:
+        st.error("Ошибка при установке активной модели")
 
 # Функция для обучения модели
 def train_model(hyperparameters):
@@ -25,34 +31,26 @@ def train_model(hyperparameters):
 
 # Функция для предсказания
 def predict(data):
-    response = requests.post(f"{API_URL}/predict", json=data)
+    response = requests.post(f"{API_URL}/predict", json={"data": data})
     if response.status_code == 200:
-        return response.json()
+        return response.json()["predictions"]
     else:
         st.error("Ошибка при предсказании")
-        return None
-
-# Функция для загрузки датасета
-def upload_dataset(file):
-    files = {"file": file.getvalue()}
-    response = requests.post(f"{API_URL}/upload", files=files)
+        return []
+    
+def fine_tune(data,params={}):
+    response = requests.post(f'{API_URL}/finetune',data,params)
     if response.status_code == 200:
-        st.success("Датасет успешно загружен")
+        st.success("Модель успешно обучена")
     else:
-        st.error("Ошибка при загрузке датасета")
-
+        st.error("Ошибка при предсказании")
+        return []
 # Основной интерфейс Streamlit
 st.title("Streamlit ML Service")
 
 # Загрузка моделей
-models = load_model()
+models = get_models()
 st.write("Доступные модели:", models)
-
-# Загрузка датасета
-st.header("Загрузка датасета")
-uploaded_file = st.file_uploader("Выберите файл с датасетом")
-if uploaded_file is not None:
-    upload_dataset(uploaded_file)
 
 # Обучение модели
 st.header("Обучение модели")
