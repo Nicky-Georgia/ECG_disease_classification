@@ -9,6 +9,7 @@ app.include_router(endpoints.router)
 
 @app.on_event("startup")
 async def startup_event():
+    '''startup event'''
     logger.info("Server starting up...")
 
     model_manager.download_and_load_model_from_gdrive(
@@ -20,4 +21,5 @@ async def startup_event():
 
 @app.on_event("shutdown")
 async def shutdown_event():
+    '''shutdown event'''
     logger.info("Server shutting down...")

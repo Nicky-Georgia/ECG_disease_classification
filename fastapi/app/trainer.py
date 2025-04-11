@@ -4,7 +4,8 @@ from app.utils.logger import logger
 TIMEOUT_SECONDS = 10
 
 
-def train_model(model, X_train, y_train, params):  # insert
+def train_model(model, X_train, y_train, params):  
+    '''model training'''
     logger.info(f"Training model {model} with params: {params}")
     try:
         model.set_params(**params)
@@ -15,6 +16,7 @@ def train_model(model, X_train, y_train, params):  # insert
         raise e
 
 def train_model_async(model, X_train, y_train, params):
+    '''async training'''
     process = multiprocessing.Process(target=train_model, args=(model, X_train, y_train, params))
     process.start()
     process.join(timeout=TIMEOUT_SECONDS)
