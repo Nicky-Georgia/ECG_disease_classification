@@ -1,4 +1,11 @@
+import os
+from enum import Enum
+import joblib
+import numpy as np
 from fastapi import APIRouter, HTTPException, UploadFile, File
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from typing import List, Any, Dict, Optional
 from app.schemas.schemas import (
     PredictRequest, PredictResponse,
     FitRequest, FitResponse,
@@ -9,13 +16,9 @@ from app.managers.model_manager import model_manager
 from app.trainer import train_model
 from app.data.loader import load_heartbeat_data
 from app.utils.logger import logger
-import numpy as np
-import joblib
-import os
-from enum import Enum
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from typing import List, Any, Dict, Optional
+
+
+
 
 router = APIRouter()
 
@@ -45,6 +48,7 @@ async def predict(request: PredictRequest):
 
 @router.post("/fit", response_model=FitResponse)
 async def fit(request: FitRequest):
+    '''fitting function'''
     logger.info(f"Fit endpoint called with params: {request.params}")
 
     # Получаем активную модель
@@ -74,12 +78,14 @@ async def fit(request: FitRequest):
 
 @router.get("/models", response_model=ModelsListResponse)
 async def list_models():
+    '''list all models'''
     logger.info("Models list endpoint called")
     models = model_manager.get_models_info()
     return ModelsListResponse(models=models)
 
 @router.post("/set", response_model=SetModelResponse)
 async def set_model(request: SetModelRequest):
+    '''activate model'''
     logger.info(f"Set model endpoint called with model_id: {request.model_id}")
 
     success = model_manager.set_active_model(request.model_id)
@@ -91,6 +97,7 @@ async def set_model(request: SetModelRequest):
 
 @router.post("/upload", response_model=UploadResponse)
 async def upload_model(file: UploadFile = File(...)):
+    '''upload model'''
     logger.info(f"Upload model endpoint called: {file.filename}")
 
     try:
@@ -118,7 +125,7 @@ def pre_fit(model):
     чтобы проинициализировать внутренние атрибуты.
     """
     X_dummy = np.array([[0, 0], [1, 1]])
-    y_dummy = np.array([0, 1])           
+    y_dummy = np.array([0, 1])
 
     try:
         model.fit(X_dummy, y_dummy)
@@ -130,7 +137,7 @@ def pre_fit(model):
     return model
 
 
-def build_model(architecture: ArchitectureEnum, params: Optional[Dict] = None): 
+def build_model(architecture: ArchitectureEnum, params: Optional[Dict] = None):
     params = params or {}
 
     if architecture == ArchitectureEnum.decision_tree:
@@ -141,14 +148,14 @@ def build_model(architecture: ArchitectureEnum, params: Optional[Dict] = None):
         model = GradientBoostingClassifier(**params)
     else:
         raise ValueError(f"Unknown architecture: {architecture}")
-    
+
     if hasattr(model, 'fit'):
         logger.info(f"Model {architecture} successfully initialized.")
     else:
         raise ValueError(f"Failed to initialize model: {architecture}")
 
     pre_fit(model)
-    
+
     return model
 
 
@@ -158,7 +165,8 @@ async def create_model(request: CreateModelRequest):
 
     # Проверяем, существует ли уже модель с таким id
     if request.model_id in model_manager.models:
-        raise HTTPException(status_code=400, detail=f"Model with id '{request.model_id}' already exists.")
+        raise HTTPException(
+            status_code=400, detail=f"Model with id '{request.model_id}' already exists.")
 
     try:
         # Создаем модель с параметрами
@@ -168,8 +176,10 @@ async def create_model(request: CreateModelRequest):
         model_manager.add_model(request.model_id, model)
         model_manager.set_active_model(request.model_id)
 
-        logger.info(f"Model '{request.model_id}' ({request.architecture}) successfully created and set as active.")
-        return SetModelResponse(message=f"Model '{request.model_id}' ({request.architecture}) created and set active.")
+        logger.info(f"Model '{request.model_id}' \
+                    ({request.architecture}) successfully created and set as active.")
+        return SetModelResponse(message=f"Model '{request.model_id}'\
+                                 ({request.architecture}) created and set active.")
     except Exception as e:
         logger.error(f"Failed to create model: {e}")
         raise HTTPException(status_code=500, detail=str(e))

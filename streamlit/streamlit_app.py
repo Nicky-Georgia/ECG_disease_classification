@@ -1,10 +1,10 @@
-import streamlit as st
-import requests
-import pandas as pd
-import json
 import re
-   
-API_URL = "http://localhost:8000"  
+import json
+import requests
+import streamlit as st
+
+
+API_URL = "http://localhost:8000"
 
 models = []
 
@@ -12,7 +12,7 @@ models = []
 st.set_page_config(page_title="ECG analysis")
 st.title("ECG analysis")
 st.caption(
-    "App integrated with a pretrained model for ECG data classification with multiple user input options"
+    "App integrated with a pretrained model for ECG data classification"
 )
 
 
@@ -39,6 +39,7 @@ if st.button("Set Active Model"):
         st.error("Failed to set active model.")
 
 def extract_data(input_string):
+    '''get nums from string'''
     # Regular expression pattern to match float numbers
     float_pattern = r'-?\d+\.\d+'
 
@@ -62,7 +63,7 @@ if st.button("Predict"):
         st.error("Invalid JSON format.")
     else:
         st.error("Prediction failed.")
-    
+
 st.header("Train Model")
 params = st.text_input("Enter training parameters (JSON format)", "{}")
 if st.button("Train Model"):

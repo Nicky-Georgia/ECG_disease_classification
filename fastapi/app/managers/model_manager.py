@@ -6,6 +6,7 @@ from app.utils.logger import logger
 MODELS_DIR = "app/models"
 
 class ModelManager:
+    '''class of model managing'''
     def __init__(self):
         self.models = {}
         self.active_model_id = None
@@ -40,10 +41,10 @@ class ModelManager:
         Скачивает модель из Google Drive.
         """
         destination = os.path.join(MODELS_DIR, filename)
-        
+
         logger.info(f"Downloading model from Google Drive (file_id={file_id}) to {destination}...")
 
-        url = f"https://drive.google.com/uc?id=1G5VIxNP8l80l7o_KK6T_QrSvFB8vJa1b"
+        url = r"https://drive.google.com/uc?id=1G5VIxNP8l80l7o_KK6T_QrSvFB8vJa1b"
 
         try:
             gdown.download(url, destination, quiet=False)
@@ -66,7 +67,8 @@ class ModelManager:
         Возвращает информацию о всех доступных моделях.
         """
         return [
-            {"id": model_id, "name": str(type(model)), "is_active": model_id == self.active_model_id}
+            {"id": model_id, "name": str(type(model)), 
+            "is_active": model_id == self.active_model_id}
             for model_id, model in self.models.items()
         ]
 
@@ -78,9 +80,8 @@ class ModelManager:
             self.active_model_id = model_id
             logger.info(f"Active model changed to {model_id}")
             return True
-        else:
-            logger.warning(f"Model {model_id} not found!")
-            return False
+        logger.warning(f"Model {model_id} not found!")
+        return False
 
     def get_active_model(self):
         """
@@ -88,9 +89,8 @@ class ModelManager:
         """
         if self.active_model_id:
             return self.models[self.active_model_id]
-        else:
-            logger.warning("No active model selected!")
-            return None
+        logger.warning("No active model selected!")
+        return None
 
     def add_model(self, model_id, model_object):
         """
